@@ -1,0 +1,67 @@
+/** @type {import('@/types').Therapist[]} */
+export const THERAPISTS = [
+  {
+    therapistId: 't1',
+    name: 'Dr. Meera Kapoor',
+    specialization: 'Anxiety & Depression',
+    experience: 9,
+    email: 'therapist@mindmate.com',
+    phone: '9011223344',
+    isActive: true,
+    bio: 'Dr. Kapoor specialises in cognitive-behavioural approaches for anxiety and depression. She creates a warm, non-judgmental space for her clients.',
+  },
+  {
+    therapistId: 't2',
+    name: 'Dr. Arjun Patel',
+    specialization: 'Trauma & PTSD',
+    experience: 14,
+    email: 'arjun.patel@mindmate.com',
+    phone: '9022334455',
+    isActive: true,
+    bio: 'Dr. Patel uses evidence-based trauma therapies including EMDR. He has extensive experience helping survivors rebuild their lives.',
+  },
+  {
+    therapistId: 't3',
+    name: 'Dr. Sunita Rao',
+    specialization: 'Relationships & Family',
+    experience: 7,
+    email: 'sunita.rao@mindmate.com',
+    phone: '9033445566',
+    isActive: true,
+    bio: 'Dr. Rao works with individuals, couples and families navigating communication challenges and relationship transitions.',
+  },
+  {
+    therapistId: 't4',
+    name: 'Dr. Karthik Bose',
+    specialization: 'Stress & Burnout',
+    experience: 11,
+    email: 'karthik.bose@mindmate.com',
+    phone: '9044556677',
+    isActive: true,
+    bio: 'Dr. Bose focuses on occupational stress, burnout recovery, and building sustainable work-life balance strategies.',
+  },
+  {
+    therapistId: 't5',
+    name: 'Dr. Ananya Singh',
+    specialization: 'Youth & Adolescent Mental Health',
+    experience: 6,
+    email: 'ananya.singh@mindmate.com',
+    phone: '9055667788',
+    isActive: false,
+    bio: 'Dr. Singh specialises in helping young adults and adolescents navigate academic pressure, identity, and emotional health.',
+  },
+];
+
+/** @type {import('@/types').AvailabilitySlot[]} */
+export const AVAILABILITY = [
+  { slotId: 's1', therapistId: 't1', date: '2026-09-02', startTime: '10:00', endTime: '11:00', isBooked: false },
+  { slotId: 's2', therapistId: 't1', date: '2026-09-02', startTime: '14:00', endTime: '15:00', isBooked: true },
+  { slotId: 's3', therapistId: 't1', date: '2026-09-03', startTime: '10:00', endTime: '11:00', isBooked: false },
+  { slotId: 's4', therapistId: 't1', date: '2026-09-03', startTime: '11:00', endTime: '12:00', isBooked: false },
+  { slotId: 's5', therapistId: 't1', date: '2026-09-04', startTime: '15:00', endTime: '16:00', isBooked: false },
+  { slotId: 's6', therapistId: 't2', date: '2026-09-02', startTime: '09:00', endTime: '10:00', isBooked: false },
+  { slotId: 's7', therapistId: 't2', date: '2026-09-03', startTime: '16:00', endTime: '17:00', isBooked: false },
+  { slotId: 's8', therapistId: 't3', date: '2026-09-02', startTime: '12:00', endTime: '13:00', isBooked: false },
+  { slotId: 's9', therapistId: 't3', date: '2026-09-04', startTime: '10:00', endTime: '11:00', isBooked: true },
+  { slotId: 's10', therapistId: 't4', date: '2026-09-05', startTime: '11:00', endTime: '12:00', isBooked: false },
+];

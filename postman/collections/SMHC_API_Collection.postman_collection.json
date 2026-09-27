@@ -1,0 +1,1639 @@
+{
+	"info": {
+		"_postman_id": "smhc-api-collection-2026",
+		"name": "SMHC – Smart Mental Health Care Companion API",
+		"description": "Complete API collection for the Smart Mental Health Care Companion (Mind Mate) application.\n\nBase URL: {{baseUrl}} (default: http://localhost:8080/api)\n\n**Setup:**\n1. Set the `baseUrl` variable to your backend URL\n2. Call Login first — the token is auto-saved to `{{authToken}}`\n3. All authenticated requests use Bearer {{authToken}} automatically",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "u1",
+			"type": "string"
+		},
+		{
+			"key": "therapistId",
+			"value": "t1",
+			"type": "string"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "🔐 Auth",
+			"item": [
+				{
+					"name": "Register (Sign Up)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    var json = pm.response.json();",
+									"    if (json.token) pm.collectionVariables.set('authToken', json.token);",
+									"    if (json.user && json.user.userId) pm.collectionVariables.set('userId', json.user.userId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"phone\": \"9876543210\",\n  \"dob\": \"2000-01-15\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var json = pm.response.json();",
+									"    if (json.token) pm.collectionVariables.set('authToken', json.token);",
+									"    if (json.user && json.user.userId) pm.collectionVariables.set('userId', json.user.userId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					}
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/forgot-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					}
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"reset-token-from-email\",\n  \"password\": \"NewSecurePass456!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/reset-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👤 Users",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/users?role=user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "user"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "List Therapists (User View)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/users?role=therapist",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "therapist"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Name\",\n  \"phone\": \"9876543210\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}",
+								"profile"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🧑‍⚕️ Therapists",
+			"item": [
+				{
+					"name": "List Therapists",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/therapists",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapists"
+							]
+						}
+					}
+				},
+				{
+					"name": "List Therapists (filtered)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/therapists?specialization=anxiety&search=meera",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapists"
+							],
+							"query": [
+								{
+									"key": "specialization",
+									"value": "anxiety"
+								},
+								{
+									"key": "search",
+									"value": "meera"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Therapist by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/therapists/{{therapistId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapists",
+								"{{therapistId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Therapist Availability",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/therapists/{{therapistId}}/availability",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapists",
+								"{{therapistId}}",
+								"availability"
+							]
+						}
+					}
+				},
+				{
+					"name": "Add Availability Slot",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"therapistId\": \"{{therapistId}}\",\n  \"date\": \"2026-10-01\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/therapists/availability",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapists",
+								"availability"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Availability Slot",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/therapists/availability/slot1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapists",
+								"availability",
+								"slot1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Own Profile (Therapist)",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/therapists/{{therapistId}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapists",
+								"{{therapistId}}",
+								"profile"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bio\": \"Licensed therapist with 8 years of experience.\",\n  \"specialization\": \"Anxiety\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "😊 Moods",
+			"item": [
+				{
+					"name": "Get Mood History",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/moods?userId={{userId}}&days=30",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"moods"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "days",
+									"value": "30"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Log Mood",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"moodType\": \"Happy\",\n  \"moodLevel\": 8,\n  \"note\": \"Had a great day!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/moods",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"moods"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Mood Trend",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/moods/trend?userId={{userId}}&period=weekly",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"moods",
+								"trend"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "period",
+									"value": "weekly"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Latest Mood",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/moods/latest?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"moods",
+								"latest"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📅 Bookings",
+			"item": [
+				{
+					"name": "Get User Bookings",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/bookings?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bookings"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Booking by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/bookings/b1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bookings",
+								"b1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"therapistId\": \"{{therapistId}}\",\n  \"date\": \"2026-10-01\",\n  \"time\": \"10:00\",\n  \"notes\": \"First session\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bookings",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bookings"
+							]
+						}
+					}
+				},
+				{
+					"name": "Cancel Booking",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{baseUrl}}/bookings/b1/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bookings",
+								"b1",
+								"cancel"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Therapist Bookings",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/bookings?therapistId={{therapistId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bookings"
+							],
+							"query": [
+								{
+									"key": "therapistId",
+									"value": "{{therapistId}}"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "💬 Chat",
+			"item": [
+				{
+					"name": "Send Chat Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"message\": \"I've been feeling anxious lately.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/chat/message",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chat",
+								"message"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Chat History",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/chat/history?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chat",
+								"history"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Clear Chat History",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/chat/history?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chat",
+								"history"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🚨 SOS Alerts",
+			"item": [
+				{
+					"name": "Trigger SOS Alert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"message\": \"I need immediate help\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sos"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get SOS Alerts",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/sos?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sos"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update SOS Alert Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"Acknowledged\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sos/sos1/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sos",
+								"sos1",
+								"status"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📞 Emergency Contacts",
+			"item": [
+				{
+					"name": "Get Emergency Contacts",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/emergency-contacts?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emergency-contacts"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Add Emergency Contact",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"name\": \"Mom\",\n  \"phone\": \"9876543210\",\n  \"relation\": \"Mother\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emergency-contacts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emergency-contacts"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Emergency Contact",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Dad\",\n  \"phone\": \"9876543211\",\n  \"relation\": \"Father\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emergency-contacts/ec1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emergency-contacts",
+								"ec1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Emergency Contact",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/emergency-contacts/ec1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emergency-contacts",
+								"ec1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Emergency View (public, viewToken)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/emergency/view?token=demo-view-token-sos1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emergency",
+								"view"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "demo-view-token-sos1"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔔 Notifications",
+			"item": [
+				{
+					"name": "Get Notifications",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/notifications?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Unread Count",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/notifications/unread-count?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"notifications",
+								"unread-count"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/notifications/n1/read",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"notifications",
+								"n1",
+								"read"
+							]
+						}
+					}
+				},
+				{
+					"name": "Mark All as Read",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/notifications/read-all?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"notifications",
+								"read-all"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📊 Reports",
+			"item": [
+				{
+					"name": "Get User Reports",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/reports?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reports"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Report by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/reports/r1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reports",
+								"r1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Therapist Reports for Patient",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/therapist/reports/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapist",
+								"reports",
+								"{{userId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Generate Report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"period\": \"monthly\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reports/generate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reports",
+								"generate"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "💡 Recommendations",
+			"item": [
+				{
+					"name": "Get User Recommendations",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/recommendations?userId={{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"recommendations"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Daily Motivation",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/recommendations/daily-motivation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"recommendations",
+								"daily-motivation"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🧘 Meditation",
+			"item": [
+				{
+					"name": "List Meditations",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/meditation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"meditation"
+							]
+						}
+					}
+				},
+				{
+					"name": "List Meditations (filtered)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/meditation?category=breathing",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"meditation"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "breathing"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Meditation by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/meditation/med1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"meditation",
+								"med1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Complete Meditation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"durationMinutes\": 10\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/meditation/med1/complete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"meditation",
+								"med1",
+								"complete"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🛡️ Admin",
+			"item": [
+				{
+					"name": "Dashboard Stats",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/admin/stats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"stats"
+							]
+						}
+					}
+				},
+				{
+					"name": "List Admin Users",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/admin/users?search=&status=active",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Admin User Detail",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"{{userId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update User (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Name\",\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"{{userId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Deactivate User",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/{{userId}}/deactivate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"{{userId}}",
+								"deactivate"
+							]
+						}
+					}
+				},
+				{
+					"name": "Reactivate User",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/{{userId}}/reactivate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"{{userId}}",
+								"reactivate"
+							]
+						}
+					}
+				},
+				{
+					"name": "Remove User",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"{{userId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "List Admin Therapists",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/admin/therapists",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"therapists"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Admin Therapist Detail",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/admin/therapists/{{therapistId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"therapists",
+								"{{therapistId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Onboard Therapist",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Dr. New Therapist\",\n  \"email\": \"dr.new@example.com\",\n  \"specialization\": \"CBT\",\n  \"phone\": \"9876543210\",\n  \"experience\": 5,\n  \"bio\": \"Specializes in cognitive behavioral therapy.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/therapists",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"therapists"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Therapist (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"specialization\": \"Anxiety & Depression\",\n  \"bio\": \"Updated bio\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/therapists/{{therapistId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"therapists",
+								"{{therapistId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Deactivate Therapist",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{baseUrl}}/admin/therapists/{{therapistId}}/deactivate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"therapists",
+								"{{therapistId}}",
+								"deactivate"
+							]
+						}
+					}
+				},
+				{
+					"name": "Reactivate Therapist",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{baseUrl}}/admin/therapists/{{therapistId}}/reactivate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"therapists",
+								"{{therapistId}}",
+								"reactivate"
+							]
+						}
+					}
+				},
+				{
+					"name": "Remove Therapist",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/admin/therapists/{{therapistId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"therapists",
+								"{{therapistId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Admin Notifications",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/admin/notifications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifications"
+							]
+						}
+					}
+				},
+				{
+					"name": "Mark Admin Notification Read",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/admin/notifications/an1/read",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifications",
+								"an1",
+								"read"
+							]
+						}
+					}
+				},
+				{
+					"name": "Broadcast Platform Notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"System Maintenance\",\n  \"message\": \"Platform will be down for maintenance on Oct 1.\",\n  \"targetRole\": \"all\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/notifications/broadcast",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"notifications",
+								"broadcast"
+							]
+						}
+					}
+				},
+				{
+					"name": "List All Moods (Analytics)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/admin/moods",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"moods"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🩺 Therapist Portal",
+			"item": [
+				{
+					"name": "Get Assigned Patients",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/therapist/patients?therapistId={{therapistId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapist",
+								"patients"
+							],
+							"query": [
+								{
+									"key": "therapistId",
+									"value": "{{therapistId}}"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Messages for Patient",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/therapist/messages/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapist",
+								"messages",
+								"{{userId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Send Message to Patient",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"text\": \"How are you feeling today?\",\n  \"fromTherapist\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/therapist/messages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"therapist",
+								"messages"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

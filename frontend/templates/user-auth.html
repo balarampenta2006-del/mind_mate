@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In · Smart Mental Health Care Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #f2f6f5;
+      --card: #ffffff;
+      --text: #22322f;
+      --muted: #6b7f7b;
+      --border: #e3ece9;
+      --primary: #2e8b7f;
+      --primary-dark: #237065;
+      --primary-soft: #e4f2ef;
+      --danger: #c96a6a;
+      --success: #3a9d6f;
+      --shadow: 0 18px 50px -18px rgba(35, 70, 62, 0.28);
+      --radius: 18px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .auth-shell {
+      width: 100%;
+      max-width: 900px;
+      min-height: 600px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      overflow: hidden;
+    }
+
+    /* ---------- Brand Panel ---------- */
+    .brand {
+      position: relative;
+      background: linear-gradient(160deg, var(--primary) 0%, #2f9d8f 55%, var(--primary-soft) 150%);
+      color: #fff;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .brand::before,
+    .brand::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .brand::before { width: 320px; height: 320px; top: -130px; right: -100px; }
+    .brand::after  { width: 220px; height: 220px; bottom: -90px; left: -60px; }
+
+    .brand-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .brand-logo {
+      width: 44px; height: 44px;
+      background: #fff;
+      color: var(--primary-dark);
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.35);
+    }
+    .brand-head small {
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      font-weight: 600;
+    }
+    .brand-head h1 { font-family: 'Poppins', sans-serif; font-size: 17px; margin-top: 2px; }
+
+    .brand-mid { position: relative; z-index: 1; margin: 24px 0; }
+    .brand-mid h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 26px;
+      line-height: 1.35;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .brand-mid p { font-size: 14.5px; line-height: 1.7; opacity: 0.92; }
+
+    .brand-points {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 12px;
+      font-size: 13.5px;
+    }
+    .brand-points div {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.95;
+    }
+    .brand-points i {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      flex: 0 0 30px;
+    }
+
+    .brand-foot { position: relative; z-index: 1; font-size: 12.5px; opacity: 0.85; }
+
+    /* ---------- Auth Form Panel ---------- */
+    .panel {
+      padding: 44px 42px 36px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-head { text-align: center; margin-bottom: 22px; }
+    .panel-head .greet {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .panel-head p { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+
+    /* Sliding tab toggle */
+    .toggle {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 5px;
+      margin-bottom: 26px;
+    }
+    .toggle .slide {
+      position: absolute;
+      top: 5px; bottom: 5px;
+      width: calc(50% - 5px);
+      left: 5px;
+      border-radius: 9px;
+      background: var(--card);
+      box-shadow: 0 4px 12px -4px rgba(35, 70, 62, 0.25);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .toggle .slide.login-active { transform: translateX(100%); }
+    .toggle button {
+      position: relative;
+      z-index: 1;
+      border: 0;
+      background: transparent;
+      padding: 10px 0;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .toggle button.active { color: var(--primary-dark); }
+
+    /* Step stage */
+    .step-stage { display: grid; grid-template-columns: 1fr; overflow: hidden; }
+    .step { grid-area: 1 / 1; min-width: 0; width: 100%; transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s; }
+    .step.hidden { visibility: hidden; opacity: 0; transform: translateY(10px); pointer-events: none; }
+
+    .field { margin-bottom: 16px; }
+    .field > label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 7px;
+      letter-spacing: 0.2px;
+    }
+    .input-wrap { position: relative; }
+    .input-wrap > i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 14px;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+    .input-wrap input {
+      width: 100%;
+      min-width: 0;
+      padding: 13px 16px 13px 42px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fbfdfc;
+      font-family: inherit;
+      font-size: 14.5px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .input-wrap input::placeholder { color: #a3b4af; }
+    .input-wrap input:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(46, 139, 127, 0.13);
+    }
+    .input-wrap input:focus ~ i,
+    .input-wrap input:focus + i { color: var(--primary); }
+    .input-wrap .prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      pointer-events: none;
+    }
+    .input-wrap .prefix + input { padding-left: 66px; }
+
+    .error-msg {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--danger);
+      margin-top: 6px;
+      min-height: 0;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    }
+    .error-msg.show { max-height: 22px; opacity: 1; margin-top: 6px; }
+
+    /* Phone + OTP columns */
+    .otp-row { display: flex; gap: 10px; }
+    .otp-box {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 14px 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fbfdfc;
+      color: var(--text);
+      outline: none;
+      caret-color: var(--primary);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease, background 0.3s ease;
+    }
+    .otp-box::-webkit-outer-spin-button,
+    .otp-box::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .otp-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(46, 139, 127, 0.13);
+      transform: translateY(-1px);
+    }
+    .otp-box.error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 4px rgba(201, 106, 106, 0.12);
+      animation: shake 0.35s ease;
+    }
+
+    .otp-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: var(--primary-soft);
+      border: 1px dashed #bcdbd4;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: var(--primary-dark);
+      margin-bottom: 16px;
+      line-height: 1.5;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+    .otp-info code { font-weight: 700; font-family: 'Consolas', monospace; }
+
+    .resend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .resend button {
+      border: 0;
+      background: none;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      cursor: pointer;
+      opacity: 0.45;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .resend button:not(:disabled) { opacity: 1; pointer-events: auto; }
+    .resend button:not(:disabled):hover { text-decoration: underline; }
+
+    /* Buttons */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 49px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-family: inherit;
+      font-size: 14.5px;
+      line-height: 1.2;
+      font-weight: 600;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+    }
+    .btn i,
+    .btn svg {
+      flex: 0 0 auto;
+      line-height: 1;
+      vertical-align: middle;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      margin-top: 6px;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px -10px rgba(35, 112, 101, 0.55);
+    }
+    .btn-primary:active { transform: translateY(0) scale(0.99); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-ghost:hover {
+      border-color: var(--primary);
+      color: var(--primary-dark);
+      background: var(--primary-soft);
+      transform: translateY(-2px);
+    }
+
+    .btn-google {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 14px;
+    }
+    .btn-google .g-svg { width: 18px; height: 18px; }
+    .btn-google:hover {
+      border-color: #d8dde2;
+      box-shadow: 0 10px 20px -10px rgba(30, 41, 59, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 18px 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      background: none;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      margin-bottom: 16px;
+      padding: 4px 2px;
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+    .back-link:hover { color: var(--primary-dark); transform: translateX(-3px); }
+
+    .hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+    .hint a { color: var(--primary-dark); text-decoration: none; font-weight: 600; }
+    .hint a:hover { text-decoration: underline; }
+
+    .panel-foot {
+      margin-top: auto;
+      padding-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 28px;
+      left: 50%;
+      transform: translate(-50%, -80px);
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--success);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 13px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 99;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      max-width: calc(100vw - 40px);
+    }
+    .toast.show { transform: translate(-50%, 0); }
+    .toast.error { border-left-color: var(--danger); }
+    .toast i { color: var(--success); }
+    .toast.error i { color: var(--danger); }
+
+    /* Success cover */
+    .success-cover {
+      position: absolute;
+      inset: 0;
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s;
+      z-index: 5;
+    }
+    .success-cover.show { opacity: 1; visibility: visible; }
+    .success-cover .check {
+      width: 74px; height: 74px;
+      border-radius: 50%;
+      background: var(--primary-soft);
+      color: var(--success);
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      margin-bottom: 20px;
+      animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .success-cover h2 { font-family: 'Poppins', sans-serif; font-size: 21px; margin-bottom: 8px; }
+    .success-cover p { color: var(--muted); font-size: 13.5px; line-height: 1.6; margin-bottom: 22px; }
+
+    /* Panel relative for cover */
+    .panel { position: relative; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    @keyframes pop {
+      0% { transform: scale(0.5); }
+      100% { transform: scale(1); }
+    }
+
+    .input-wrap input { min-height: 49px; }
+
+    @media (max-width: 860px) {
+      .auth-shell { grid-template-columns: 1fr; max-width: 460px; }
+      .brand { display: none; }
+      .panel { padding: 36px 26px 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="auth-shell">
+
+    <!-- Brand panel -->
+    <aside class="brand">
+      <div class="brand-head">
+        <div class="brand-logo"><i class="fa-solid fa-heart-pulse"></i></div>
+        <div>
+          <small>SMHC</small>
+          <h1>Mental Health Companion</h1>
+        </div>
+      </div>
+
+      <div class="brand-mid">
+        <h2>Your space to feel heard, understood &amp; supported.</h2>
+        <p>A calm, private place where your mental wellbeing comes first. Join thousands who start their wellness journey here every day.</p>
+      </div>
+
+      <div class="brand-points">
+        <div><i class="fa-solid fa-shield-halved"></i> Confidential &amp; private sessions</div>
+        <div><i class="fa-solid fa-user-doctor"></i> Verified, caring professionals</div>
+        <div><i class="fa-solid fa-moon"></i> Guided tools for daily calm</div>
+      </div>
+
+      <div class="brand-foot"><i class="fa-solid fa-lock"></i> Your data stays private, always.</div>
+    </aside>
+
+    <!-- Form panel -->
+    <section class="panel">
+      <div class="panel-head">
+        <div class="greet" id="greetTitle">Create your account</div>
+        <p id="greetSub">Fill a few details to begin your journey. Takes under a minute.</p>
+      </div>
+
+      <!-- Sliding toggle -->
+      <div class="toggle" role="tablist">
+        <span class="slide" id="toggleSlide"></span>
+        <button type="button" class="active" id="tabSignup" role="tab" aria-selected="true">Sign Up</button>
+        <button type="button" id="tabLogin" role="tab" aria-selected="false">Login</button>
+      </div>
+
+      <div class="step-stage">
+
+        <!-- ============ SIGN UP ============ -->
+        <form class="step" id="signupForm" novalidate>
+          <div class="field">
+            <label for="suName"><i class="fa-solid fa-user"></i> Full Name</label>
+            <div class="input-wrap">
+              <input type="text" id="suName" placeholder="e.g. Aarav Sharma" autocomplete="name" />
+            </div>
+            <p class="error-msg" id="suNameErr"><i class="fa-solid fa-circle-exclamation"></i> Please enter a valid full name (min 2 letters).</p>
+          </div>
+
+          <div class="field">
+            <label for="suDob"><i class="fa-solid fa-cake-candles"></i> Date of Birth</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-calendar-days"></i>
+              <input type="date" id="suDob" autocomplete="bday" />
+            </div>
+            <p class="error-msg" id="suDobErr"><i class="fa-solid fa-circle-exclamation"></i> You must be 13 or older to join.</p>
+          </div>
+
+          <div class="field">
+            <label for="suMobile"><i class="fa-solid fa-mobile-screen"></i> Mobile Number</label>
+            <div class="input-wrap">
+              <span class="prefix">+91</span>
+              <input type="tel" id="suMobile" placeholder="10-digit mobile number" inputmode="numeric" maxlength="10" autocomplete="tel" />
+            </div>
+            <p class="error-msg" id="suMobileErr"><i class="fa-solid fa-circle-exclamation"></i> Enter a valid 10-digit mobile number.</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Send OTP to Mobile</button>
+
+          <div class="divider">or continue with</div>
+          <button type="button" class="btn btn-google" data-google>
+            <svg class="g-svg" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Continue with Google
+          </button>
+        </form>
+
+        <!-- ============ LOGIN ============ -->
+        <form class="step hidden" id="loginForm" novalidate>
+          <div class="field">
+            <label for="liMobile"><i class="fa-solid fa-mobile-screen"></i> Mobile Number</label>
+            <div class="input-wrap">
+              <span class="prefix">+91</span>
+              <input type="tel" id="liMobile" placeholder="10-digit mobile number" inputmode="numeric" maxlength="10" autocomplete="tel" />
+            </div>
+            <p class="error-msg" id="liMobileErr"><i class="fa-solid fa-circle-exclamation"></i> Enter a valid 10-digit mobile number.</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Send OTP to Mobile</button>
+
+          <div class="divider">or continue with</div>
+          <button type="button" class="btn btn-google" data-google>
+            <svg class="g-svg" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Continue with Google
+          </button>
+        </form>
+
+        <!-- ============ OTP STEP (shared) ============ -->
+        <div class="step hidden" id="otpStep">
+          <button type="button" class="back-link" id="otpBack"><i class="fa-solid fa-arrow-left"></i> Change mobile number</button>
+
+          <div class="otp-info">
+            <i class="fa-solid fa-message"></i>
+            <span>Simulated SMS sent to <strong>+91 <span id="otpMobileDisplay">097XXXXXXX</span></strong> — demo OTP is <code id="demoOtp">1234</code></span>
+          </div>
+
+          <div class="field">
+            <label>Enter 4-digit Verification Code</label>
+            <div class="otp-row" id="otpRow">
+              <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 1" />
+              <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2" />
+              <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3" />
+              <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4" />
+            </div>
+            <p class="error-msg" id="otpErr"><i class="fa-solid fa-circle-exclamation"></i> Incorrect code. Try again.</p>
+          </div>
+
+          <button type="button" class="btn btn-primary" id="verifyOtp" disabled><i class="fa-solid fa-shield-halved"></i> Verify &amp; Continue</button>
+
+          <div class="resend">
+            <span id="otpTimer">Resend code in <strong>00:30</strong></span>
+            <button type="button" id="resendOtp" disabled>Resend OTP</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="panel-foot">
+        <i class="fa-solid fa-lock"></i> Secured with 4-digit phone verification
+      </div>
+
+      <!-- Success cover -->
+      <div class="success-cover" id="successCover">
+        <div class="check"><i class="fa-solid fa-check"></i></div>
+        <h2 id="successTitle">All set!</h2>
+        <p id="successText">You&rsquo;re now part of SMHC. Redirecting you to your wellness space…</p>
+        <button type="button" class="btn btn-primary" style="width:auto; padding: 12px 28px;" id="goToApp"><i class="fa-solid fa-house-heart"></i> Continue to App</button>
+      </div>
+    </section>
+
+    <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---------- Element references ---------- */
+      const tabSignup = document.getElementById('tabSignup');
+      const tabLogin = document.getElementById('tabLogin');
+      const slide = document.getElementById('toggleSlide');
+      const signupForm = document.getElementById('signupForm');
+      const loginForm = document.getElementById('loginForm');
+      const otpStep = document.getElementById('otpStep');
+      const greetTitle = document.getElementById('greetTitle');
+      const greetSub = document.getElementById('greetSub');
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const successCover = document.getElementById('successCover');
+      const successTitle = document.getElementById('successTitle');
+      const successText = document.getElementById('successText');
+
+      const DEMO_OTP = '1234';
+      let activeForm = signupForm;
+      let resendTimer = null;
+
+      /* ---------- Helpers ---------- */
+      function showToast(msg, isError) {
+        toastMsg.textContent = msg;
+        toast.classList.toggle('error', !!isError);
+        toast.classList.add('show');
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => toast.classList.remove('show'), 3200);
+      }
+
+      function setError(id, show) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('show', !!show);
+      }
+
+      function validateMobile(value) {
+        return /^\d{10}$/.test(value);
+      }
+
+      function validateName(value) {
+        return /^[A-Za-z][A-Za-z .'-]{1,49}$/.test(value.trim());
+      }
+
+      function maskMobile(num) {
+        return num.slice(0, 4) + 'XXXXX' + num.slice(9);
+      }
+
+      /* ---------- Tab toggle ---------- */
+      function setTab(which) {
+        const signup = which === 'signup';
+        tabSignup.classList.toggle('active', signup);
+        tabLogin.classList.toggle('active', !signup);
+        tabSignup.setAttribute('aria-selected', signup);
+        tabLogin.setAttribute('aria-selected', !signup);
+        slide.classList.toggle('login-active', !signup);
+
+        signupForm.classList.toggle('hidden', !signup);
+        loginForm.classList.toggle('hidden', signup);
+        activeForm = signup ? signupForm : loginForm;
+
+        greetTitle.textContent = signup ? 'Create your account' : 'Welcome back';
+        greetSub.textContent = signup
+          ? 'Fill a few details to begin your journey. Takes under a minute.'
+          : 'Good to see you again. Enter your mobile to sign in.';
+        ['liMobile', 'liMobileErr'].forEach((id, i) => { if (i) setError(id, false); else document.getElementById(id).value = ''; });
+        ['suName', 'suDob', 'suMobile', 'suNameErr', 'suDobErr', 'suMobileErr'].forEach((id, i) => {
+          if (i >= 3) setError(id, false);
+          else document.getElementById(id).value = '';
+        });
+        resetOtpUi(false);
+      }
+      tabSignup.addEventListener('click', () => setTab('signup'));
+      tabLogin.addEventListener('click', () => setTab('login'));
+
+      /* ---------- Digit-only mobile inputs ---------- */
+      document.querySelectorAll('input[type="tel"]').forEach((inp) => {
+        inp.addEventListener('input', () => {
+          inp.value = inp.value.replace(/\D/g, '').slice(0, 10);
+        });
+      });
+
+      /* ---------- Form submissions -> send OTP ---------- */
+      function sendOtp(e) {
+        e.preventDefault();
+        const mobileInput = activeForm.querySelector('input[type="tel"]');
+
+        if (activeForm === signupForm) {
+          const name = document.getElementById('suName').value.trim();
+          const dob = new Date(document.getElementById('suDob').value);
+          const today = new Date();
+          const minAge = new Date();
+          minAge.setFullYear(today.getFullYear() - 13);
+          const validName = validateName(name);
+          const validDob = !isNaN(dob.getTime()) && dob <= new Date() && dob <= minAge;
+          setError('suNameErr', !validName);
+          setError('suDobErr', !validDob);
+          if (!validName || !validDob) return;
+        }
+
+        const mobile = mobileInput.value;
+        const validMobile = validateMobile(mobile);
+        setError(activeForm === signupForm ? 'suMobileErr' : 'liMobileErr', !validMobile);
+        if (!validMobile) return;
+
+        document.getElementById('otpMobileDisplay').textContent = maskMobile(mobile);
+        enterOtpUi();
+      }
+      signupForm.addEventListener('submit', sendOtp);
+      loginForm.addEventListener('submit', sendOtp);
+
+      /* ---------- OTP UI ---------- */
+      const otpBoxes = Array.from(document.querySelectorAll('#otpRow .otp-box'));
+      const otpErr = document.getElementById('otpErr');
+      const verifyBtn = document.getElementById('verifyOtp');
+      const resendBtn = document.getElementById('resendOtp');
+      const otpTimerEl = document.getElementById('otpTimer');
+
+      function enterOtpUi() {
+        signupForm.classList.add('hidden');
+        loginForm.classList.add('hidden');
+        otpStep.classList.remove('hidden');
+        otpBoxes.forEach((b) => {
+          b.value = '';
+          b.classList.remove('error');
+        });
+        setError('otpErr', false);
+        startResendCountdown(true);
+        setTimeout(() => otpBoxes[0].focus(), 350);
+      }
+
+      function resetOtpUi(showForms = true) {
+        otpStep.classList.add('hidden');
+        if (showForms) {
+          signupForm.classList.toggle('hidden', activeForm !== signupForm);
+          loginForm.classList.toggle('hidden', activeForm === signupForm);
+        }
+        if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+        resendBtn.disabled = true;
+        otpTimerEl.innerHTML = 'Resend code in <strong>00:30</strong>';
+        verifyBtn.disabled = true;
+      }
+
+      document.getElementById('otpBack').addEventListener('click', () => resetOtpUi(true));
+
+      otpBoxes.forEach((box, idx) => {
+        box.addEventListener('input', () => {
+          box.value = box.value.replace(/\D/g, '').slice(0, 1);
+          box.classList.remove('error');
+          setError('otpErr', false);
+          if (box.value && idx < otpBoxes.length - 1) otpBoxes[idx + 1].focus();
+          const allFilled = otpBoxes.every(b => b.value.length === 1);
+          verifyBtn.disabled = !allFilled;
+        });
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !box.value && idx > 0) {
+            otpBoxes[idx - 1].focus();
+          }
+          if (e.key === 'ArrowLeft' && idx > 0) otpBoxes[idx - 1].focus();
+          if (e.key === 'ArrowRight' && idx < otpBoxes.length - 1) otpBoxes[idx + 1].focus();
+        });
+        box.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const text = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 4);
+          if (!text) return;
+          text.split('').forEach((ch, i) => {
+            if (otpBoxes[i]) { otpBoxes[i].value = ch; otpBoxes[i].classList.remove('error'); }
+          });
+          const filled = otpBoxes.filter(b => b.value.length === 1).length;
+          if (filled < otpBoxes.length) otpBoxes[filled].focus();
+          else { otpBoxes[otpBoxes.length - 1].focus(); verifyBtn.disabled = false; }
+        });
+      });
+
+      function startResendCountdown(initial) {
+        if (resendTimer) clearInterval(resendTimer);
+        resendBtn.disabled = true;
+        let secs = 30;
+        update();
+        resendTimer = setInterval(update, 1000);
+        function update() {
+          const mm = String(Math.floor(secs / 60)).padStart(2, '0');
+          const ss = String(secs % 60).padStart(2, '0');
+          otpTimerEl.innerHTML = 'Resend code in <strong>' + mm + ':' + ss + '</strong>';
+          if (secs === 0) {
+            clearInterval(resendTimer);
+            resendTimer = null;
+            otpTimerEl.textContent = 'Didn\'t receive it?';
+            resendBtn.disabled = false;
+          }
+          if (initial && secs === 30) initial = false; // no-op safeguard
+          if (secs > 0) secs--;
+        }
+      }
+
+      resendBtn.addEventListener('click', () => {
+        showToast('New OTP sent — demo code: ' + DEMO_OTP, false);
+        otpBoxes.forEach((b) => { b.value = ''; b.classList.remove('error'); });
+        verifyBtn.disabled = true;
+        startResendCountdown(true);
+        otpBoxes[0].focus();
+      });
+
+      verifyBtn.addEventListener('click', () => {
+        const entered = otpBoxes.map((b) => b.value).join('');
+        if (entered.length !== 4) {
+          setError('otpErr', true);
+          otpBoxes.forEach((b) => b.classList.toggle('error', !b.value));
+          return;
+        }
+        if (entered !== DEMO_OTP) {
+          setError('otpErr', true);
+          otpBoxes.forEach((b) => { b.classList.add('error'); b.value = ''; });
+          otpBoxes[0].focus();
+          return;
+        }
+        showSuccess();
+      });
+
+      /* ---------- Success / Google ---------- */
+      function showSuccess() {
+        const isSignup = activeForm === signupForm;
+        successTitle.textContent = isSignup ? 'Account created!' : 'Welcome back!';
+        successText.textContent = isSignup
+          ? 'Your SMHC account is ready. Redirecting to your wellness space…'
+          : 'Signed in successfully. Redirecting to your wellness space…';
+        resetOtpUi(true);
+        successCover.classList.add('show');
+      }
+      document.getElementById('goToApp').addEventListener('click', () => {
+        location.href = '#app'; // replace with real app entry route
+      });
+
+      document.querySelectorAll('[data-google]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          showToast('Opening Google sign-in (sandbox)…', false);
+          setTimeout(showSuccess, 900);
+        });
+      });
+
+      /* ---------- Init ---------- */
+      setTab('signup');
+    })();
+  </script>
+</body>
+</html>
