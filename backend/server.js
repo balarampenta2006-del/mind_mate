@@ -78,8 +78,8 @@ app.use('/api/therapist', therapistPortalRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// Start server
-if (process.env.NODE_ENV !== 'test') {
+// Start server (skip when running on Vercel — it uses the serverless entry point)
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   (async () => {
     await connectDB();
 
