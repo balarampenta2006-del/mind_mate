@@ -44,6 +44,15 @@ app.use((req, res, next) => {
 
 import { connectDB, isMongoConnected } from './src/config/database.js';
 
+// Root route handler
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Welcome to SMHC (Smart Mental Health Care Companion) API Server',
+    healthCheck: 'http://localhost:' + config.port + '/api/health',
+    status: 'online',
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
