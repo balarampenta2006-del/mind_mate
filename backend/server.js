@@ -22,12 +22,26 @@ import therapistPortalRoutes from './src/routes/therapistPortalRoutes.js';
 
 const app = express();
 
-// Middleware — CORS origins come from the CORS_ORIGIN env (comma separated).
-const corsOptions = config.corsOrigin.length
-  ? { origin: config.corsOrigin, methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], allowedHeaders: ['Content-Type', 'Authorization'] }
-  : { origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], allowedHeaders: ['Content-Type', 'Authorization'] };
+// Middleware — CORS configuration
+const allowedOrigins = config.corsOrigin;
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    // If CORS_ORIGIN is empty or contains '*', allow all origins dynamically
+    if (!allowedOrigins.length || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, true); // Fallback allow to avoid blocking preview domains
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -11,6 +11,11 @@ import app from '../server.js';
 let dbReady = false;
 
 export default async function handler(req, res) {
+  // Fast-path OPTIONS preflight requests so CORS headers are returned immediately
+  if (req.method === 'OPTIONS') {
+    return app(req, res);
+  }
+
   if (!dbReady) {
     await connectDB();
     dbReady = true;
