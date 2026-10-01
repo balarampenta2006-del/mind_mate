@@ -42,6 +42,14 @@ app.use((req, res, next) => {
   next();
 });
 
+// URL Normalizer: allow routes with or without /api prefix
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api') && req.url !== '/' && req.url !== '/favicon.ico') {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
+
 import { connectDB, isMongoConnected } from './src/config/database.js';
 
 // Root route handler
